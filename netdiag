@@ -1,0 +1,160 @@
+#!/bin/bash
+
+my_ip=`/usr/sbin/networksetup -getinfo Wi-Fi | awk '/IP address/ {print $3}' | sed 's/address://' | sed '/^\s*$/d'`
+my_router=`/usr/sbin/networksetup -getinfo Wi-Fi | awk '/Router:/ {print $2}' | sed 's/Router://' | sed '/^\s*$/d'`
+internet_pingable_host=8.8.8.8
+internet_dns_hostname=google.com
+
+
+
+
+
+ping_self() {
+
+network_status=`ping -c 1 -t 5 ${my_ip} > /dev/null; echo $?`
+
+
+	if [ "$network_status" -eq 0 ]		
+		
+		then
+		
+			echo ' '
+			echo ' '
+			echo ' '
+			echo 'Self reachable via ICMP:  ' "$(tput setaf 2)---> PASS <---$(tput sgr0)"
+			echo ' '
+			echo ' '
+			echo ' '
+
+		else
+		
+			echo ' '
+                        echo ' '
+                        echo ' '
+			echo 'Self reachable via ICMP:  ' "$(tput setaf 1)---> FAIL <---$(tput sgr0)"
+                        echo ' '
+                        echo ' '
+                        echo ' '
+			
+
+
+	fi
+
+}
+
+
+
+ping_router() {
+
+network_status=`ping -c 1 -t 5 ${my_router} > /dev/null; echo $?`
+
+
+	if [ "$network_status" -eq 0 ]		
+		
+		then
+		
+			echo ' '
+			echo ' '
+			echo ' '
+			echo 'Router reachable via ICMP:  ' "$(tput setaf 2)---> PASS <---$(tput sgr0)"
+			echo ' '
+			echo ' '
+			echo ' '
+
+		else
+		
+			echo ' '
+                        echo ' '
+                        echo ' '
+			echo 'Router reachable via ICMP:  ' "$(tput setaf 1)---> FAIL <---$(tput sgr0)"
+                        echo ' '
+                        echo ' '
+                        echo ' '
+			
+
+
+	fi
+
+}
+
+
+
+ping_internet_ip() {
+
+network_status=`ping -c 1 -t 5 ${internet_pingable_host} > /dev/null; echo $?`
+
+
+	if [ "$network_status" -eq 0 ]		
+		
+		then
+		
+			echo ' '
+			echo ' '
+			echo ' '
+			echo 'Internet Host reachable via ICMP:  ' "$(tput setaf 2)---> PASS <---$(tput sgr0)"
+			echo ' '
+			echo ' '
+			echo ' '
+
+		else
+		
+			echo ' '
+                        echo ' '
+                        echo ' '
+			echo 'Internet Host reachable via ICMP:  ' "$(tput setaf 1)---> FAIL <---$(tput sgr0)"
+                        echo ' '
+                        echo ' '
+                        echo ' '
+			
+
+
+	fi
+
+}
+
+
+
+ping_via_dns_lookup() {
+
+network_status=`ping -c 1 -t 5 ${internet_dns_hostname} > /dev/null; echo $?`
+
+
+	if [ "$network_status" -eq 0 ]		
+		
+		then
+		
+			echo ' '
+			echo ' '
+			echo ' '
+			echo 'Internet Host (resolved by DNS) reachable via ICMP:  ' "$(tput setaf 2)---> PASS <---$(tput sgr0)"
+			echo ' '
+			echo ' '
+			echo ' '
+
+		else
+		
+			echo ' '
+                        echo ' '
+                        echo ' '
+			echo 'Internet Host (resolved by DNS) reachable via ICMP:  ' "$(tput setaf 1)---> FAIL <---$(tput sgr0)"
+                        echo ' '
+                        echo ' '
+                        echo ' '
+			
+
+
+	fi
+
+}
+
+
+#runtime
+
+ping_self
+ping_router
+ping_internet_ip
+ping_via_dns_lookup
+
+
+
+exit 0
