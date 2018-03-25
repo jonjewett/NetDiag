@@ -1,4 +1,5 @@
 # NetDiag
 
-FYI - The GUI "NetDiag" app can be downloaded via the .dmg file, and it MUST be moved into the /Applications folder before running it, for proper opperation.
+
+'Just download and run.  Dependency requring execution from within /Applications has been fixed.  Download and run from the mounted dmg even if you want.
 
