@@ -1,11 +1,17 @@
 #!/bin/bash
 
+	#intro message
+	echo ' '
+	echo ' '
+	echo 'Testing network conditions... one moment please...'
+
+
 my_ip=`/usr/sbin/networksetup -getinfo Wi-Fi | awk '/IP address/ {print $3}' | sed 's/address://' | sed '/^\s*$/d'`
 my_router=`/usr/sbin/networksetup -getinfo Wi-Fi | awk '/Router:/ {print $2}' | sed 's/Router://' | sed '/^\s*$/d'`
 internet_pingable_host=8.8.8.8
 internet_dns_hostname=google.com
-
-
+avg_lan_latency=`ping -c 5 ${my_router} | awk '/round-trip/ {print $4}' | cut -c 7-13 | sed 's/\///' | sed 's/\///'`
+avg_wan_latency=`ping -c 5 ${internet_pingable_host} | awk '/round-trip/ {print $4}' | cut -c 7-14 | sed 's/\///' | sed 's/\///'`
 
 
 
@@ -19,25 +25,15 @@ network_status=`ping -c 1 -t 5 ${my_ip} > /dev/null; echo $?`
 		then
 		
 			echo ' '
-			echo ' '
-			echo ' '
-			echo 'Self reachable via ICMP:  ' "$(tput setaf 2)---> PASS <---$(tput sgr0)"
-			echo ' '
-			echo ' '
-			echo ' '
+			echo 'Self reachable via ICMP:  ' "$(tput setaf 2) PASS $(tput sgr0)"
+
 
 		else
 		
-			echo ' '
-                        echo ' '
-                        echo ' '
-			echo 'Self reachable via ICMP:  ' "$(tput setaf 1)---> FAIL <---$(tput sgr0)"
-                        echo ' '
-                        echo ' '
-                        echo ' '
+            echo ' '
+			echo 'Self reachable via ICMP:  ' "$(tput setaf 1) FAIL $(tput sgr0)"
+
 			
-
-
 	fi
 
 }
@@ -53,26 +49,14 @@ network_status=`ping -c 1 -t 5 ${my_router} > /dev/null; echo $?`
 		
 		then
 		
-			echo ' '
-			echo ' '
-			echo ' '
-			echo 'Router reachable via ICMP:  ' "$(tput setaf 2)---> PASS <---$(tput sgr0)"
-			echo ' '
-			echo ' '
-			echo ' '
+			echo 'Router reachable via ICMP:  ' "$(tput setaf 2) PASS $(tput sgr0)"
+
 
 		else
 		
-			echo ' '
-                        echo ' '
-                        echo ' '
-			echo 'Router reachable via ICMP:  ' "$(tput setaf 1)---> FAIL <---$(tput sgr0)"
-                        echo ' '
-                        echo ' '
-                        echo ' '
+			echo 'Router reachable via ICMP:  ' "$(tput setaf 1) FAIL $(tput sgr0)"
+
 			
-
-
 	fi
 
 }
@@ -88,23 +72,12 @@ network_status=`ping -c 1 -t 5 ${internet_pingable_host} > /dev/null; echo $?`
 		
 		then
 		
-			echo ' '
-			echo ' '
-			echo ' '
-			echo 'Internet Host reachable via ICMP:  ' "$(tput setaf 2)---> PASS <---$(tput sgr0)"
-			echo ' '
-			echo ' '
-			echo ' '
+			echo 'Internet Host reachable via ICMP:  ' "$(tput setaf 2) PASS $(tput sgr0)"
+
 
 		else
 		
-			echo ' '
-                        echo ' '
-                        echo ' '
-			echo 'Internet Host reachable via ICMP:  ' "$(tput setaf 1)---> FAIL <---$(tput sgr0)"
-                        echo ' '
-                        echo ' '
-                        echo ' '
+			echo 'Internet Host reachable via ICMP:  ' "$(tput setaf 1) FAIL $(tput sgr0)"
 			
 
 
@@ -123,23 +96,12 @@ network_status=`ping -c 1 -t 5 ${internet_dns_hostname} > /dev/null; echo $?`
 		
 		then
 		
-			echo ' '
-			echo ' '
-			echo ' '
-			echo 'Internet Host (resolved by DNS) reachable via ICMP:  ' "$(tput setaf 2)---> PASS <---$(tput sgr0)"
-			echo ' '
-			echo ' '
-			echo ' '
+			echo 'Internet Host (resolved by DNS) reachable via ICMP:  ' "$(tput setaf 2) PASS $(tput sgr0)"
+			
 
 		else
 		
-			echo ' '
-                        echo ' '
-                        echo ' '
-			echo 'Internet Host (resolved by DNS) reachable via ICMP:  ' "$(tput setaf 1)---> FAIL <---$(tput sgr0)"
-                        echo ' '
-                        echo ' '
-                        echo ' '
+			echo 'Internet Host (resolved by DNS) reachable via ICMP:  ' "$(tput setaf 1) FAIL $(tput sgr0)"
 			
 
 
@@ -148,12 +110,33 @@ network_status=`ping -c 1 -t 5 ${internet_dns_hostname} > /dev/null; echo $?`
 }
 
 
+measure_latency() {
+	
+	echo ' '
+	echo 'Average Latency (LAN): '${avg_lan_latency} ms
+	echo 'Average Latency (WAN): '${avg_wan_latency} ms
+	
+}
+
+
+after_whitespace() {
+	
+	echo ' '
+	echo ' '
+	echo ' '
+
+}
+
+
+
 #runtime
 
 ping_self
 ping_router
 ping_internet_ip
 ping_via_dns_lookup
+measure_latency
+after_whitespace
 
 
 
